@@ -14,7 +14,10 @@ describe('Schema', () => {
             }
         }>('/name/:name', ({ params: { name } }) => name, {
             preHandler: schema({
-                params: S.object().prop('name', S.string())
+                params: S.object().prop('name', S.string()),
+                config: {
+                    customError: (type) => `Invalid ${type}`
+                }
             })
         })
 
@@ -33,7 +36,10 @@ describe('Schema', () => {
             preHandler: schema({
                 query: S.object()
                     .prop('first', S.string().required())
-                    .prop('last', S.string().required())
+                    .prop('last', S.string().required()),
+                config: {
+                    customError: (type) => `Invalid ${type}`
+                }
             })
         })
 
@@ -63,19 +69,25 @@ describe('Schema', () => {
                 preHandler: schema({
                     body: S.object()
                         .prop('first', S.string().required())
-                        .prop('last', S.string().required())
+                        .prop('last', S.string().required()),
+                    config: {
+                        customError: (type) => `Invalid ${type}`
+                    }
                 })
             }
         )
 
+        const body = JSON.stringify({
+            first: 'Fubuki',
+            last: 'Shirakami'
+        })
+
         const correct = await app.handle(
             new Request('/name', {
                 method: 'POST',
-                body: JSON.stringify({
-                    first: 'Fubuki',
-                    last: 'Shirakami'
-                }),
+                body,
                 headers: {
+                    'content-length': body.length.toString(),
                     'content-type': 'application/json'
                 }
             })

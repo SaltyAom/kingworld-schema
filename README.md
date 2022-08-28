@@ -15,6 +15,10 @@ Schema validation is capable of validation of:
 - query
 - params
 
+And optional config:
+- customError `(type: SchemaType, error: Error | TypeError) => any`
+    - Return custom error message response
+
 Schema plugin use [fluent-json-schema](https://github.com/fastify/fluent-json-schema) for schema declaration, and [fluent-schema-validator](https://github.com/saltyaom/fluent-schema-validator) for schema validation.
 
 #### Example
