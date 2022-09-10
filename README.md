@@ -19,12 +19,12 @@ And optional config:
 - customError `(type: SchemaType, error: Error | TypeError) => any`
     - Return custom error message response
 
-Schema plugin use [fluent-json-schema](https://github.com/fastify/fluent-json-schema) for schema declaration, and [fluent-schema-validator](https://github.com/saltyaom/fluent-schema-validator) for schema validation.
+Schema plugin use [fastest-validator](https://github.com/icebob/fastest-validator) for schema validation and declaration which has full TypeScript supports and auto-complete.
 
 #### Example
 ```typescript
 import KingWorld from 'kingworld'
-import schema, { S } from '@kingworldjs/schema'
+import schema from '@kingworldjs/schema'
 
 new KingWorld()
     .get<{
@@ -36,7 +36,13 @@ new KingWorld()
             request.params.id = +request.params.id
         },
         preHandler: schema({
-            params: S.object().prop('id', S.number().minimum(1).maximum(100))
+            params: {
+                id: {
+                    type: "number",
+                    min: 1,
+                    max: 100
+                }
+            }
         })
     })
     .listen(3000)
@@ -49,12 +55,18 @@ new KingWorld()
 To use validation on group scope, simply attach `schema` to `preHandler`:
 ```typescript
 import KingWorld from 'kingworld'
-import schema, { S } from '@kingworldjs/schema'
+import schema from '@kingworldjs/schema'
 
 new KingWorld()
     .group('/group', (app) => app
         .preHandler(schema({
-            params: S.object().prop('id', S.number().minimum(1).maximum(100))
+            params: {
+                id: {
+                    type: "number",
+                    min: 1,
+                    max: 100
+                }
+            }
         }))
         .get<{
             params: {

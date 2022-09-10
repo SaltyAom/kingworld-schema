@@ -1,6 +1,6 @@
 import KingWorld from 'kingworld'
 
-import schema, { S } from '../src'
+import schema from '../src'
 
 import { describe, expect, it } from 'bun:test'
 
@@ -14,7 +14,11 @@ describe('Schema', () => {
             }
         }>('/name/:name', ({ params: { name } }) => name, {
             preHandler: schema({
-                params: S.object().prop('name', S.string()),
+                params: {
+                    name: {
+                        type: 'string'
+                    }
+                },
                 config: {
                     customError: (type) => `Invalid ${type}`
                 }
@@ -34,9 +38,14 @@ describe('Schema', () => {
             }
         }>('/name', ({ query: { first, last } }) => `${last} ${first}`, {
             preHandler: schema({
-                query: S.object()
-                    .prop('first', S.string().required())
-                    .prop('last', S.string().required()),
+                query: {
+                    first: {
+                        type: 'string'
+                    },
+                    last: {
+                        type: 'string'
+                    }
+                },
                 config: {
                     customError: (type) => `Invalid ${type}`
                 }
@@ -67,9 +76,14 @@ describe('Schema', () => {
             },
             {
                 preHandler: schema({
-                    body: S.object()
-                        .prop('first', S.string().required())
-                        .prop('last', S.string().required()),
+                    body: {
+                        first: {
+                            type: 'string'
+                        },
+                        last: {
+                            type: 'string'
+                        }
+                    },
                     config: {
                         customError: (type) => `Invalid ${type}`
                     }

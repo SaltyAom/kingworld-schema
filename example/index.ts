@@ -1,20 +1,29 @@
 import KingWorld from 'kingworld'
 
-import schema, { S } from '../src/index'
+import schema from '../src/index'
 
 const app = new KingWorld()
     .post('/', () => 'Hi', {
         preHandler: schema({
-            body: S.object()
-                .prop('username', S.string().required())
-                .prop('password', S.string().required()),
+            query: {
+                name: {
+                    type: 'string'
+                }
+            },
+            body: {
+                username: {
+                    type: 'string'
+                },
+                password: {
+                    type: 'string'
+                }
+            },
             config: {
                 customError: (type, error) =>
                     new Response(
                         JSON.stringify({
                             type,
-                            error: error.message,
-                            reason: 'You sucks bro, just cry about it'
+                            error: error[0].message
                         }),
                         {
                             status: 400,
